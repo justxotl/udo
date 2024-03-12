@@ -1,7 +1,7 @@
 <?php
 
 const SERVER="localhost";
-const BD="UDO";
+const BD="udo";
 const USER="root";
 const PASS="";
 
