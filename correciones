@@ -1,0 +1,12 @@
+->Encriptado
+$clave= hash ("sha256" $contraseña);
+
+->y que funcione/furule/sirva/etc (actualice y borre)
+        
+        
+        ---->Actualizar<-----
+1) formulario(form con sus input, boton para enviar etc...)    
+
+2)ajaxusuario aqui es donde van a llegar los datos
+
+

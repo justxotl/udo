@@ -119,4 +119,107 @@ class usuarioControl extends usuarioModel
         }
         echo json_encode($alerta);
     }/* Fin de del controlador */
+
+    //funcion para actualizar
+    public static function actualizarUsuarioControlador(){
+        $id= $_POST['usuario_id_up'];
+
+        $checkUser=modeloPrincipal::ejecutarConsultaSimple("SELECT * FROM user WHERE id='$id' ");
+
+        if($checkUser->rowCount()<=0){
+            $alerta=[
+                "Alerta"=>"simple",
+                "Titulo"=>"ERROR",
+                "Texto"=>"No hay nada que actualizar",
+                "Tipo"=>"error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }else{
+            $campos=$checkUser->fetch();
+        }
+
+        $pass_u = $_POST['pass_u'];
+        $confirm_pass_u = $_POST['confirm_pass_u'];
+
+        $nivel = $_POST['nivel'];
+
+        //Comprobar los campos vacios del formulario
+        if ( $pass_u == "" || $confirm_pass_u == "" || $nivel == "") {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error inesperado",
+                "Texto" => "Por favor rellene los campos faltantes",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        // verificando si los datos cumplen con el formato
+        if (modeloPrincipal::verificarDatos("[a-zA-Z0-9$@.\-]{7,100}", $pass_u) || modeloPrincipal::verificarDatos("[a-zA-Z0-9$@.\-]{7,100}", $confirm_pass_u)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "ocurrio un error inesperado",
+                "Texto" => "Las Contraseñas no coinciden con el formato solicitado",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        // comprobando las contraseñas
+        
+        if ($pass_u != $confirm_pass_u) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "ocurrio un error inesperado",
+                "Texto" => "Las contraseñas no coinciden",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        } else {
+            $pass = $pass_u;
+        }
+
+        //Comprovando privilegios
+
+        if ($nivel < 1 || $nivel > 2) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "ocurrio un error inesperado",
+                "Texto" => "Como te las arreglaste para tener tantos privilegios",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        $datos_usuario_up=[
+            "Pass"=>$pass_u,
+            "Nivel"=>$nivel,
+            "ID"=>$id
+        ];
+
+        if(usuarioModel::modelActualizarUsers($datos_usuario_up)){
+            $alerta=[
+                "Alerta"=>"recargar",
+                "Titulo"=>"Datos actualizados",
+                "Texto"=>"Los Datos han sido actualizados",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "Alerta"=>"simple",
+                "Titulo"=>"ocurrio un error inesperado",
+                "Texto"=>"Los datos no se han podido actualizar",
+                "Tipo"=>"error"
+            ];
+            
+        }
+        echo json_encode($alerta); 
+
+    }
+
 }

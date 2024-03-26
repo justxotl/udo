@@ -15,4 +15,17 @@ class usuarioModel extends modeloPrincipal
         $sql->execute();
         return $sql;
     }
+
+     // Modelo para actualizar usuarios 
+     protected static function modelActualizarUsers($datos)
+     {
+        $sql=modeloPrincipal::conexion()->prepare("UPDATE user SET pass_u=:Pass, nivel=:Nivel WHERE id=:ID ");
+
+        $sql->bindParam(":Pass", $datos['Pass']);
+        $sql->bindParam(":Nivel", $datos['Nivel']);
+        $sql->bindParam(":ID", $datos['ID']);
+        $sql->execute();
+
+        return $sql;
+     }
 }
